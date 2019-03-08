@@ -26,7 +26,10 @@
       "error",
       "single"
     ],
-    "indent": ["error", 2],
+    "indent": "off",
+    "no-multiple-empty-lines": "off",
+    "no-trailing-spaces": "off",
+    "space-before-function-paren": "off",
     "react/prop-types": [0]
   }
 }
