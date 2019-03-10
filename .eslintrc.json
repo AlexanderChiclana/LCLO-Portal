@@ -26,6 +26,7 @@
       "error",
       "single"
     ],
+    
     "indent": "off",
     "no-multiple-empty-lines": "off",
     "no-trailing-spaces": "off",

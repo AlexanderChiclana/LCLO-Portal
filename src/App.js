@@ -44,10 +44,29 @@ class App extends Component {
           </Alert>
         ))}
         <main className="container">
-        <Route path='/training' render={() => (
-            <Form setUser={this.setUser} page={'training'}/>
+           <Route path='/training' render={() => (
+            <Form setUser={this.setUser} page={'training'} user={user}/>
           )} />
 
+          <Route path='/capacity_building' render={() => (
+            <Form setUser={this.setUser} page={'capacity_building'} user={user}/>
+          )} />
+
+          <Route path='/entrepreneurship' render={() => (
+            <Form setUser={this.setUser} page={'entrepreneurship'} user={user}/>
+          )} />
+
+          <Route path='/points_of_encounter' render={() => (
+            <Form setUser={this.setUser} page={'points_of_encounter'} user={user}/>
+          )} />
+
+          <Route path='/news' render={() => (
+            <Form setUser={this.setUser} page={'news'} user={user}/>
+          )} />
+
+          <Route path='/resources' render={() => (
+            <Form setUser={this.setUser} page={'resources'} user={user}/>
+          )} />
 
 
 
