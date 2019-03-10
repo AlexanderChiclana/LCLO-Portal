@@ -21,7 +21,7 @@ class Form extends Component {
         this.state = {
           user: null,
           alerts: [],
-
+          formTitle: 'Post Title',
           text: '',
         
           
@@ -47,6 +47,8 @@ class Form extends Component {
       handleChange(value) {
         this.setState({ text: value })
       }
+
+     
       
       handleSubmit = () => {
         return fetch(`${apiUrl}/blogposts`, {
@@ -87,7 +89,10 @@ class Form extends Component {
         // re-render
         this.setState({ tags: newTags })
     }
- 
+    
+    handleTitle = (event) => {
+        this.setState({ formTitle: event.target.value })
+      }
 
     render() {
         const { tags, suggestions } = this.state
@@ -95,6 +100,7 @@ class Form extends Component {
         return (
             <div>
                 <br />
+
                 <ReactTags  
                     tags={tags}
                     suggestions={suggestions}
@@ -102,7 +108,11 @@ class Form extends Component {
                     handleAddition={this.handleAddition}
                     handleDrag={this.handleDrag}
                     delimiters={delimiters} />
-              <ReactQuill value={this.state.text} onChange={this.handleChange} />    
+
+    <br /> 
+<input type="text" className="form-control form-control-lg" placeholder="Posting Title" value={this.state.value} onChange={this.handleTitle} />
+
+              <ReactQuill theme="snow" value={this.state.text} onChange={this.handleChange} />    
               <button type='button' className='btn btn-primary btn-lg' onClick={this.handleSubmit}>Submit to {this.props.page}</button>      
             </div>
         )
