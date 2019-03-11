@@ -21,7 +21,7 @@ class Form extends Component {
         this.state = {
           user: null,
           alerts: [],
-          formTitle: 'Post Title',
+          formTitle: '',
           text: '',
         
           
@@ -60,9 +60,9 @@ class Form extends Component {
             body: JSON.stringify({
                     blogpost: {
                       page: this.props.page,
-                      heading: 'new encounter',
+                      heading: this.state.formTitle,
                       text: this.state.text,
-                      tags: ['YES']
+                      tags: this.state.tags
                     }  
             })
           })
