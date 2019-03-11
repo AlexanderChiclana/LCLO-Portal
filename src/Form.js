@@ -3,6 +3,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import apiUrl from './apiConfig'
 import { WithContext as ReactTags } from 'react-tag-input'
+import Feed from './Feed'
 
 
 // import axios from 'axios'
@@ -34,7 +35,8 @@ class Form extends Component {
             { id: 'Costa Rica', text: 'Costa Rica' },
             { id: 'Sri Lanka', text: 'Sri Lanka' },
             { id: 'Thailand', text: 'Thailand' }
-         ]
+         ],
+          archiveVisibility: false
         }
         // binding the rich text editor
         this.handleChange = this.handleChange.bind(this)
@@ -94,6 +96,11 @@ class Form extends Component {
         this.setState({ formTitle: event.target.value })
       }
 
+
+    handleArchive = () => {
+        this.setState({ archiveVisibility: true })
+    }
+
     render() {
         const { tags, suggestions } = this.state
 
@@ -118,8 +125,13 @@ class Form extends Component {
               <br />  
 
               <div className="d-flex flex-row-reverse">
-              <button type='button' className='btn btn-primary btn-lg col-3' onClick={this.handleSubmit}>Submit to {(this.props.pageName).toLowerCase()}</button>      
+              <button type='button' className='btn btn-success btn-lg col-2' onClick={this.handleArchive}>View Archive</button> 
+
+              <button type='button' className='btn btn-primary btn-lg col-3' onClick={this.handleSubmit}>Submit to {(this.props.pageName).toLowerCase()}</button> 
+
             </div>
+
+                { this.state.archiveVisibility ? <Feed page={this.props.page} /> : null}
             </div>
         )
     }
