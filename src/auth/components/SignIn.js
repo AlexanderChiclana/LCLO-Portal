@@ -42,6 +42,7 @@ class SignIn extends Component {
         <h3>Sign In</h3>
         <label htmlFor="email">Email</label>
         <input
+          className='form-control form-control-lg'
           required
           type="email"
           name="email"
@@ -51,6 +52,7 @@ class SignIn extends Component {
         />
         <label htmlFor="password">Password</label>
         <input
+          className='form-control form-control-lg'
           required
           name="password"
           value={password}
@@ -58,7 +60,7 @@ class SignIn extends Component {
           placeholder="Password"
           onChange={this.handleChange}
         />
-        <button type="submit">Sign In</button>
+        <button type="submit" className="btn btn-primary btn-lg">Sign In</button>
       </form>
     )
   }

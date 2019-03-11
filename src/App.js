@@ -9,6 +9,7 @@ import SignIn from './auth/components/SignIn'
 import SignOut from './auth/components/SignOut'
 import ChangePassword from './auth/components/ChangePassword'
 import Form from './Form'
+import Home from './Home'
 
 import Alert from 'react-bootstrap/Alert'
 
@@ -44,28 +45,34 @@ class App extends Component {
           </Alert>
         ))}
         <main className="container">
-           <Route path='/training' render={() => (
-            <Form setUser={this.setUser} page={'training'} user={user}/>
+
+        <AuthenticatedRoute user={user} exact path='/' render={() => (
+            <Home />
           )} />
 
-          <Route path='/capacity_building' render={() => (
-            <Form setUser={this.setUser} page={'capacity_building'} user={user}/>
+
+           <AuthenticatedRoute user={user} path='/training' render={() => (
+            <Form setUser={this.setUser} page={'training'} pageName={'Training'} user={user}/>
           )} />
 
-          <Route path='/entrepreneurship' render={() => (
-            <Form setUser={this.setUser} page={'entrepreneurship'} user={user}/>
+          <AuthenticatedRoute user={user} path='/capacity_building' render={() => (
+            <Form setUser={this.setUser} page={'capacity_building'} pageName={'Capacity Building'} user={user}/>
           )} />
 
-          <Route path='/points_of_encounter' render={() => (
-            <Form setUser={this.setUser} page={'points_of_encounter'} user={user}/>
+          <AuthenticatedRoute user={user} path='/entrepreneurship' render={() => (
+            <Form setUser={this.setUser} page={'entrepreneurship'} pageName={'Entrepreneurship'} user={user}/>
           )} />
 
-          <Route path='/news' render={() => (
-            <Form setUser={this.setUser} page={'news'} user={user}/>
+          <AuthenticatedRoute user={user} path='/points_of_encounter' render={() => (
+            <Form setUser={this.setUser} page={'points_of_encounter'} pageName={'Points Of Encounter'} user={user}/>
           )} />
 
-          <Route path='/resources' render={() => (
-            <Form setUser={this.setUser} page={'resources'} user={user}/>
+          <AuthenticatedRoute user={user} path='/news' render={() => (
+            <Form setUser={this.setUser} page={'news'} pageName={'News'} user={user}/>
+          )} />
+
+          <AuthenticatedRoute user={user} path='/resources' render={() => (
+            <Form setUser={this.setUser} page={'resources'} pageName={'Resources'} user={user}/>
           )} />
 
 

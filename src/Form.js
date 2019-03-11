@@ -100,7 +100,9 @@ class Form extends Component {
         return (
             <div>
                 <br />
-
+                <div className="d-flex justify-content-center">
+                <h2>{this.props.pageName}</h2>
+                </div>
                 <ReactTags  
                     tags={tags}
                     suggestions={suggestions}
@@ -112,8 +114,12 @@ class Form extends Component {
     <br /> 
 <input type="text" className="form-control form-control-lg" placeholder="Posting Title" value={this.state.value} onChange={this.handleTitle} />
 
-              <ReactQuill theme="snow" value={this.state.text} onChange={this.handleChange} />    
-              <button type='button' className='btn btn-primary btn-lg' onClick={this.handleSubmit}>Submit to {this.props.page}</button>      
+              <ReactQuill theme="snow" value={this.state.text} onChange={this.handleChange} />  
+              <br />  
+
+              <div className="d-flex flex-row-reverse">
+              <button type='button' className='btn btn-primary btn-lg col-3' onClick={this.handleSubmit}>Submit to {(this.props.pageName).toLowerCase()}</button>      
+            </div>
             </div>
         )
     }
