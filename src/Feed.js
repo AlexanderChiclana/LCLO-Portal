@@ -27,7 +27,7 @@ class Feed extends Component {
         const BlogpostList = () => this.state.blogposts.map(blogpost => 
         
             <div key={blogpost._id}>
-              <Blogpost heading={blogpost.heading} tags={blogpost.tags} text={blogpost.text} /> 
+              <Blogpost heading={blogpost.heading} tags={blogpost.tags} text={blogpost.text} id={blogpost._id}/> 
             </div>
           )  
 
