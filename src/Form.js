@@ -4,6 +4,7 @@ import 'react-quill/dist/quill.snow.css'
 import apiUrl from './apiConfig'
 import { WithContext as ReactTags } from 'react-tag-input'
 import Feed from './Feed'
+import axios from 'axios'
 
 
 // import axios from 'axios'
@@ -36,6 +37,9 @@ class Form extends Component {
             { id: 'Sri Lanka', text: 'Sri Lanka' },
             { id: 'Thailand', text: 'Thailand' }
          ],
+         blogposts: [],
+
+
           archiveVisibility: false
         }
         // binding the rich text editor
@@ -50,10 +54,21 @@ class Form extends Component {
         this.setState({ text: value })
       }
 
-     
+      componentDidMount() {
+        this.getAllBlogPosts()
+       }
+
+      getAllBlogPosts = () => {
+        axios.get(`${apiUrl}/${this.props.page}`)
+  
+          .then(res => {
+            this.setState({ blogposts: res.data.blogposts })
+          })
+      }
+
       
       handleSubmit = () => {
-        return fetch(`${apiUrl}/blogposts`, {
+        fetch(`${apiUrl}/blogposts`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -68,6 +83,7 @@ class Form extends Component {
                     }  
             })
           })
+          .then(this.getAllBlogPosts)
       }
 
       handleDelete(i) {
@@ -75,6 +91,7 @@ class Form extends Component {
         this.setState({
          tags: tags.filter((tag, index) => index !== i)
         })
+        .then(this.getAllBlogPosts)
     }
  
     handleAddition(tag) {
@@ -131,7 +148,7 @@ class Form extends Component {
 
             </div>
 
-                { this.state.archiveVisibility ? <Feed page={this.props.page} user={this.props.user} /> : null}
+                { this.state.archiveVisibility ? <Feed page={this.props.page} blogposts={this.state.blogposts} getAllBlogPosts={this.getAllBlogPosts} user={this.props.user} /> : null}
             </div>
         )
     }
