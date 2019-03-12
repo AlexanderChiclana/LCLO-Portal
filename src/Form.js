@@ -118,8 +118,8 @@ class Form extends Component {
                     handleDrag={this.handleDrag}
                     delimiters={delimiters} />
 
-    <br /> 
-<input type="text" className="form-control form-control-lg" placeholder="Posting Title" value={this.state.value} onChange={this.handleTitle} />
+                    <br /> 
+                <input type="text" className="form-control form-control-lg" placeholder="Posting Title" value={this.state.value} onChange={this.handleTitle} />
 
               <ReactQuill theme="snow" value={this.state.text} onChange={this.handleChange} />  
               <br />  
@@ -131,7 +131,7 @@ class Form extends Component {
 
             </div>
 
-                { this.state.archiveVisibility ? <Feed page={this.props.page} /> : null}
+                { this.state.archiveVisibility ? <Feed page={this.props.page} user={this.props.user} /> : null}
             </div>
         )
     }

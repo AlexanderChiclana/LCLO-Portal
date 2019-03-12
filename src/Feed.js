@@ -13,10 +13,11 @@ class Feed extends Component {
       }
 
     componentDidMount() {
-        // this.setState({loading: true})
-        console.log(this.props.page)
+       this.getAllBlogPosts()
+      }
+
+      getAllBlogPosts = () => {
         axios.get(`${apiUrl}/${this.props.page}`)
-        // axios.get('http://localhost:4741/' + this.props.resourceName)
   
           .then(res => {
             this.setState({ blogposts: res.data.blogposts })
@@ -26,7 +27,7 @@ class Feed extends Component {
     render() {
         const BlogpostList = () => this.state.blogposts.map(blogpost => 
             <div key={blogpost._id}>
-              <Blogpost heading={blogpost.heading} tags={blogpost.tags} text={blogpost.text} id={blogpost._id}/> 
+              <Blogpost getAllBlogPosts={this.getAllBlogPosts} page={blogpost.page} heading={blogpost.heading} text={blogpost.text} id={blogpost._id} user={this.props.user} /> 
             </div>
           )  
 
