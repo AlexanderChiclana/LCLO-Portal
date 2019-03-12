@@ -14,8 +14,8 @@ class Feed extends Component {
 
     componentDidMount() {
         // this.setState({loading: true})
-        
-        axios.get(`${apiUrl}/${this.props.page}s`)
+        console.log(this.props.page)
+        axios.get(`${apiUrl}/${this.props.page}`)
         // axios.get('http://localhost:4741/' + this.props.resourceName)
   
           .then(res => {
@@ -25,7 +25,6 @@ class Feed extends Component {
 
     render() {
         const BlogpostList = () => this.state.blogposts.map(blogpost => 
-        
             <div key={blogpost._id}>
               <Blogpost heading={blogpost.heading} tags={blogpost.tags} text={blogpost.text} id={blogpost._id}/> 
             </div>
