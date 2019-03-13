@@ -84,6 +84,11 @@ class Form extends Component {
             })
           })
           .then(this.getAllBlogPosts)
+          .then(this.setState({
+              text: '',
+              formTitle: '',
+              tags: []
+          }))
       }
 
       handleDelete(i) {
@@ -122,10 +127,10 @@ class Form extends Component {
         const { tags, suggestions } = this.state
 
         return (
-            <div>
+            <div >
                 <br />
                 <div className="d-flex justify-content-center">
-                <h2>{this.props.pageName}</h2>
+                <h1>{this.props.pageName}</h1>
                 </div>
                 <ReactTags  
                     tags={tags}
@@ -136,9 +141,12 @@ class Form extends Component {
                     delimiters={delimiters} />
 
                     <br /> 
-                <input type="text" className="form-control form-control-lg" placeholder="Posting Title" value={this.state.value} onChange={this.handleTitle} />
+                    <div className="formStyle">
+
+                <input type="text" className="form-control form-control-lg" placeholder="Posting Title" value={this.state.formTitle} onChange={this.handleTitle} />
 
               <ReactQuill theme="snow" value={this.state.text} onChange={this.handleChange} />  
+              </div>
               <br />  
 
               <div className="d-flex flex-row-reverse">

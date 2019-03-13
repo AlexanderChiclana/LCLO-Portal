@@ -129,11 +129,13 @@ class Blogpost extends Component {
                     delimiters={delimiters} /> : null } */}
 
                   { this.state.editorOpen ? <ReactQuill theme="snow" value={this.state.text} onChange={this.handleChange} /> : null }
+                    
+                  <div className="d-flex flex-row-reverse">
 
-                  <a className="btn btn-primary" onClick={this.toggleEditor}>Edit Post</a>
-                  { this.state.editorOpen ? <a className="btn btn-secondary" onClick={this.handleUpdate}>Publish Changes</a> : null }
-                  { this.state.editorOpen ? <a className="btn btn-danger" onClick={this.handleDeletePost}>Delete Post</a> : null }
-
+                  <a className="btn btn-outline-danger" onClick={this.toggleEditor}>Edit Post</a>
+                  { this.state.editorOpen ? <a className="btn btn-outline-success" onClick={this.handleUpdate}>Publish Changes</a> : null }
+                  { this.state.editorOpen ? <a className="btn btn-primary text-white" onClick={this.handleDeletePost}>Delete Post</a> : null }
+                    </div>
                 </div>
               </div>           
         
