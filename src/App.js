@@ -44,15 +44,15 @@ class App extends Component {
             </Alert.Heading>
           </Alert>
         ))}
-        <main className="containerFluid"> <AuthenticatedRoute user={user} exact path='/' render={() => (
+        {/* <main className="containerFluid"> <AuthenticatedRoute user={user} exact path='/' render={() => (
             <Home />
-          )} /></main>
+          )} /></main> */}
 
         <main className="container">
 
-        {/* <AuthenticatedRoute user={user} exact path='/' render={() => (
+        <AuthenticatedRoute user={user} exact path='/' render={() => (
             <Home />
-          )} /> */}
+          )} />
 
 
            <AuthenticatedRoute user={user} path='/training' render={() => (
