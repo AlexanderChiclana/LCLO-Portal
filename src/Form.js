@@ -2,166 +2,186 @@ import React, { Component } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import apiUrl from './apiConfig'
-import { WithContext as ReactTags } from 'react-tag-input'
+// import { WithContext as ReactTags } from 'react-tag-input'
 import Feed from './Feed'
 import axios from 'axios'
 
+class Form extends Component {
+  constructor() {
+    super()
 
-// import axios from 'axios'
-const KeyCodes = {
-    comma: 188,
-    enter: 13
+    this.state = {
+      user: null,
+      alerts: [],
+      formTitle: '',
+      text: '',
+      pinned: false,
+      tags: [],
+      currentTagValue: '',
+      blogposts: [],
+      archiveVisibility: false
+    }
+    // binding the rich text editor
+    this.handleChange = this.handleChange.bind(this)
+  }
+  handleChange(value) {
+    this.setState({ text: value })
   }
 
-  const delimiters = [KeyCodes.comma, KeyCodes.enter]
+  componentDidMount() {
+    this.getAllBlogPosts()
+  }
 
+  getAllBlogPosts = () => {
+    axios
+      .get(`${apiUrl}/${this.props.page}`)
 
-class Form extends Component {
-    constructor () {
-        super()
-    
-        this.state = {
-          user: null,
-          alerts: [],
-          formTitle: '',
-          text: '',
-        
-          
-          tags: [],
+      .then(res => {
+        this.setState({ blogposts: res.data.blogposts })
+      })
+  }
 
-        suggestions: [
-            { id: 'USA', text: 'USA' },
-            { id: 'Germany', text: 'Germany' },
-            { id: 'Austria', text: 'Austria' },
-            { id: 'Costa Rica', text: 'Costa Rica' },
-            { id: 'Sri Lanka', text: 'Sri Lanka' },
-            { id: 'Thailand', text: 'Thailand' }
-         ],
-         blogposts: [],
-
-
-          archiveVisibility: false
+  handleSubmit = () => {
+    fetch(`${apiUrl}/blogposts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token token=${this.props.user.token}`
+      },
+      body: JSON.stringify({
+        blogpost: {
+          page: this.props.page,
+          heading: this.state.formTitle,
+          text: this.state.text,
+          tags: this.state.tags,
+          pinned: this.state.pinned
         }
-        // binding the rich text editor
-        this.handleChange = this.handleChange.bind(this)
-
-        // binding the tags
-        this.handleDelete = this.handleDelete.bind(this)
-        this.handleAddition = this.handleAddition.bind(this)
-        this.handleDrag = this.handleDrag.bind(this)
-      }
-      handleChange(value) {
-        this.setState({ text: value })
-      }
-
-      componentDidMount() {
-        this.getAllBlogPosts()
-       }
-
-      getAllBlogPosts = () => {
-        axios.get(`${apiUrl}/${this.props.page}`)
-  
-          .then(res => {
-            this.setState({ blogposts: res.data.blogposts })
-          })
-      }
-
-      
-      handleSubmit = () => {
-        fetch(`${apiUrl}/blogposts`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Token token=${this.props.user.token}`
-            },
-            body: JSON.stringify({
-                    blogpost: {
-                      page: this.props.page,
-                      heading: this.state.formTitle,
-                      text: this.state.text,
-                      tags: this.state.tags
-                    }  
-            })
-          })
-          .then(this.getAllBlogPosts)
-          .then(this.setState({
-              text: '',
-              formTitle: '',
-              tags: []
-          }))
-      }
-
-      handleDelete(i) {
-        const { tags } = this.state
+      })
+    })
+      .then(this.getAllBlogPosts)
+      .then(
         this.setState({
-         tags: tags.filter((tag, index) => index !== i)
+          text: '',
+          formTitle: '',
+          tags: [],
+          currentTagValue: ''
         })
-        .then(this.getAllBlogPosts)
-    }
- 
-    handleAddition(tag) {
-        this.setState(state => ({ tags: [...state.tags, tag] }))
-    }
- 
-    handleDrag(tag, currPos, newPos) {
-        const tags = [...this.state.tags]
-        const newTags = tags.slice()
- 
-        newTags.splice(currPos, 1)
-        newTags.splice(newPos, 0, tag)
- 
-        // re-render
-        this.setState({ tags: newTags })
-    }
-    
-    handleTitle = (event) => {
-        this.setState({ formTitle: event.target.value })
+      )
+  }
+
+  handleTitle = event => {
+    this.setState({ formTitle: event.target.value })
+  }
+
+  handleArchive = () => {
+    this.setState({ archiveVisibility: true })
+  }
+
+  handleCheckboxChange = event => {
+    const target = event.target
+    const value = target.type === 'checkbox' ? target.checked : target.value
+    const name = target.name
+
+    this.setState({
+      [name]: value
+    })
+  }
+
+  handleTagChange = event => {
+    this.setState({ currentTagValue: event.target.value })
+  }
+
+  handleTagSubmit = event => {
+    this.setState(state => {
+      const tags = state.tags.concat(state.currentTagValue)
+
+      return {
+        tags,
+        currentTagValue: ''
       }
+    })
 
+    event.preventDefault()
+  }
 
-    handleArchive = () => {
-        this.setState({ archiveVisibility: true })
-    }
+  render() {
+    // const { tags, suggestions } = this.state
 
-    render() {
-        const { tags, suggestions } = this.state
+    return (
+      <div>
+        <br />
+        <div className='d-flex justify-content-center'>
+          <h1>{this.props.pageName}</h1>
+        </div>
 
-        return (
-            <div >
-                <br />
-                <div className="d-flex justify-content-center">
-                <h1>{this.props.pageName}</h1>
-                </div>
-                <ReactTags  
-                    tags={tags}
-                    suggestions={suggestions}
-                    handleDelete={this.handleDelete}
-                    handleAddition={this.handleAddition}
-                    handleDrag={this.handleDrag}
-                    delimiters={delimiters} />
+        <form onSubmit={this.handleTagSubmit}>
+          <label>
+            <input
+              type='text'
+              value={this.state.currentTagValue}
+              onChange={this.handleTagChange}
+            />
+          </label>
+          <input type='submit' value='Add Tag' />
+          Tags: {this.state.tags.join(', ')}
+        </form>
 
-                    <br /> 
-                    <div className="formStyle">
+        <br />
+        <div className='formStyle'>
+          <input
+            type='text'
+            className='form-control form-control-lg'
+            placeholder='Posting Title'
+            value={this.state.formTitle}
+            onChange={this.handleTitle}
+          />
 
-                <input type="text" className="form-control form-control-lg" placeholder="Posting Title" value={this.state.formTitle} onChange={this.handleTitle} />
+          <ReactQuill
+            theme='snow'
+            value={this.state.text}
+            onChange={this.handleChange}
+          />
+        </div>
+        <br />
+        <label>
+          <input
+            name='pinned'
+            type='checkbox'
+            checked={this.state.pinned}
+            onChange={this.handleCheckboxChange}
+          />
+          Pin Post?
+        </label>
 
-              <ReactQuill theme="snow" value={this.state.text} onChange={this.handleChange} />  
-              </div>
-              <br />  
+        <div className='d-flex flex-row-reverse'>
+          <button
+            type='button'
+            className='btn btn-success btn-lg col-2'
+            onClick={this.handleArchive}
+          >
+            View Archive
+          </button>
 
-              <div className="d-flex flex-row-reverse">
-              <button type='button' className='btn btn-success btn-lg col-2' onClick={this.handleArchive}>View Archive</button> 
+          <button
+            type='button'
+            className='btn btn-primary btn-lg col-3'
+            onClick={this.handleSubmit}
+          >
+            Submit to {this.props.pageName.toLowerCase()}
+          </button>
+        </div>
 
-              <button type='button' className='btn btn-primary btn-lg col-3' onClick={this.handleSubmit}>Submit to {(this.props.pageName).toLowerCase()}</button> 
-
-            </div>
-
-                { this.state.archiveVisibility ? <Feed page={this.props.page} blogposts={this.state.blogposts} getAllBlogPosts={this.getAllBlogPosts} user={this.props.user} /> : null}
-            </div>
-        )
-    }
+        {this.state.archiveVisibility ? (
+          <Feed
+            page={this.props.page}
+            blogposts={this.state.blogposts}
+            getAllBlogPosts={this.getAllBlogPosts}
+            user={this.props.user}
+          />
+        ) : null}
+      </div>
+    )
+  }
 }
 
 export default Form
-
-

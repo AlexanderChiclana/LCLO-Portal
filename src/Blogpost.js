@@ -21,23 +21,18 @@ class Blogpost extends Component {
             editorOpen: false,
             heading: '',
             text: '',
+            pinned: false,
 
-            tags: [],
-            suggestions: [
-                { id: 'USA', text: 'USA' },
-                { id: 'Germany', text: 'Germany' },
-                { id: 'Austria', text: 'Austria' },
-                { id: 'Costa Rica', text: 'Costa Rica' },
-                { id: 'Sri Lanka', text: 'Sri Lanka' },
-                { id: 'Thailand', text: 'Thailand' }
-             ]
+            tags: []
+    
         }
       }
     
     componentDidMount() {
     this.setState({ text: this.props.text,
         heading: this.props.heading,
-        tags: this.props.tags
+        tags: this.props.tags,
+        pinned: this.props.pinned
     })
     }
     
@@ -89,7 +84,8 @@ class Blogpost extends Component {
                     blogpost: {
                       page: this.props.page,
                       heading: this.state.heading,
-                      text: this.state.text
+                      text: this.state.text,
+                      pinned: this.state.pinned
                     }  
             })
           })
@@ -106,6 +102,16 @@ class Blogpost extends Component {
             }
           }).then(this.props.getAllBlogPosts)
           .catch(console.log('error'))
+      }
+
+      handleCheckboxChange = (event) => {
+        const target = event.target
+        const value = target.type === 'checkbox' ? target.checked : target.value
+        const name = target.name
+    
+        this.setState({
+          [name]: value
+        })
       }
     
     render() {
@@ -129,7 +135,17 @@ class Blogpost extends Component {
                     delimiters={delimiters} /> : null } */}
 
                   { this.state.editorOpen ? <ReactQuill theme="snow" value={this.state.text} onChange={this.handleChange} /> : null }
-                    
+                  { this.state.editorOpen ? <label>
+                                        <input
+                                        name="pinned"
+                                        type="checkbox"
+                                        checked={this.state.pinned}
+                                        onChange={this.handleCheckboxChange} />
+                                        Pin Post?
+                                         </label>
+            
+                    : null }
+
                   <div className="d-flex flex-row-reverse">
 
                   <a className="btn btn-outline-danger" onClick={this.toggleEditor}>Edit Post</a>

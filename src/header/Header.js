@@ -5,6 +5,9 @@ import './Header.scss'
 
 const authenticatedOptions = (
   <React.Fragment>
+
+    <Link to='/pinned'>Pinned</Link>
+
     <Link to="/training">Training</Link>
     <Link to="/capacity_building">Capacity Building</Link>
     <Link to="/entrepreneurship">Entrepreneurship</Link>
@@ -33,7 +36,7 @@ const Header = ({ user }) => (
     <h1>LCLO Group Site Portal
     </h1>
     <nav>
-      { user && <span>Welcome, {user.email}</span>}
+      {/* { user && <span>Welcome, {user.email}</span>} */}
       { user ? authenticatedOptions : unauthenticatedOptions }
       { alwaysOptions }
     </nav>

@@ -54,6 +54,9 @@ class App extends Component {
             <Home />
           )} />
 
+          <AuthenticatedRoute user={user} path='/pinned' render={() => (
+            <Form setUser={this.setUser} page={'pinned'} pageName={'Pinned'} user={user}/>
+          )} />
 
            <AuthenticatedRoute user={user} path='/training' render={() => (
             <Form setUser={this.setUser} page={'training'} pageName={'Training'} user={user}/>
