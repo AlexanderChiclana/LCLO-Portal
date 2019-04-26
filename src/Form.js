@@ -14,8 +14,10 @@ class Form extends Component {
       user: null,
       alerts: [],
       formTitle: '',
+      imageURL: '',
       text: '',
       pinned: false,
+      featured: false,
       tags: [],
       currentTagValue: '',
       blogposts: [],
@@ -54,7 +56,9 @@ class Form extends Component {
           heading: this.state.formTitle,
           text: this.state.text,
           tags: this.state.tags,
-          pinned: this.state.pinned
+          image: this.state.imageURL,
+          pinned: this.state.pinned,
+          featured: this.state.featured
         }
       })
     })
@@ -63,6 +67,7 @@ class Form extends Component {
         this.setState({
           text: '',
           formTitle: '',
+          image: '',
           tags: [],
           currentTagValue: ''
         })
@@ -104,6 +109,10 @@ class Form extends Component {
     event.preventDefault()
   }
 
+  handleImageURL = event => {
+    this.setState({ imageURL: event.target.value }) 
+  }
+
   render() {
     // const { tags, suggestions } = this.state
 
@@ -135,6 +144,13 @@ class Form extends Component {
             value={this.state.formTitle}
             onChange={this.handleTitle}
           />
+             <input
+            type='text'
+            className='form-control form-control-lg'
+            placeholder='Image URL'
+            value={this.state.imageURL}
+            onChange={this.handleImageURL}
+          />
 
           <ReactQuill
             theme='snow'
@@ -151,6 +167,16 @@ class Form extends Component {
             onChange={this.handleCheckboxChange}
           />
           Pin Post?
+        </label>
+
+        <label>
+          <input
+            name='featured'
+            type='checkbox'
+            checked={this.state.featured}
+            onChange={this.handleCheckboxChange}
+          />
+          Featured?
         </label>
 
         <div className='d-flex flex-row-reverse'>

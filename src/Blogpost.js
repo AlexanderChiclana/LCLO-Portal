@@ -32,7 +32,8 @@ class Blogpost extends Component {
     this.setState({ text: this.props.text,
         heading: this.props.heading,
         tags: this.props.tags,
-        pinned: this.props.pinned
+        pinned: this.props.pinned,
+        featured: this.props.featured
     })
     }
     
@@ -49,30 +50,6 @@ class Blogpost extends Component {
         this.setState({ heading: event.target.value })
     }
 
-    // for tags
-
-    // handleDelete(i) {
-    //     const { tags } = this.state
-    //     this.setState({
-    //      tags: tags.filter((tag, index) => index !== i)
-    //     })
-    // }
- 
-    // handleAddition(tag) {
-    //     this.setState(state => ({ tags: [...state.tags, tag] }))
-    // }
- 
-    // handleDrag(tag, currPos, newPos) {
-    //     const tags = [...this.state.tags]
-    //     const newTags = tags.slice()
- 
-    //     newTags.splice(currPos, 1)
-    //     newTags.splice(newPos, 0, tag)
- 
-    //     // re-render
-    //     this.setState({ tags: newTags })
-    // }
-
     handleUpdate = () => {
         fetch(`${apiUrl}/blogposts/${this.props.id}`, {
             method: 'PATCH',
@@ -85,7 +62,8 @@ class Blogpost extends Component {
                       page: this.props.page,
                       heading: this.state.heading,
                       text: this.state.text,
-                      pinned: this.state.pinned
+                      pinned: this.state.pinned,
+                      featured: this.state.featured
                     }  
             })
           })
@@ -126,13 +104,7 @@ class Blogpost extends Component {
                 <div className="card-body">
                   {/* <h5 className="card-title">Special title treatment</h5> */}
                   { this.state.editorOpen ? null : <p className="card-text">{this.props.text}</p> }
-                  {/* { this.state.editorOpen ? <ReactTags  
-                    tags={tags}
-                    suggestions={suggestions}
-                    handleDelete={this.handleDelete}
-                    handleAddition={this.handleAddition}
-                    handleDrag={this.handleDrag}
-                    delimiters={delimiters} /> : null } */}
+        
 
                   { this.state.editorOpen ? <ReactQuill theme="snow" value={this.state.text} onChange={this.handleChange} /> : null }
                   { this.state.editorOpen ? <label>
@@ -145,11 +117,22 @@ class Blogpost extends Component {
                                          </label>
             
                     : null }
+                  
+                  { this.state.editorOpen ? <label>
+                                        <input
+                                        name="featured"
+                                        type="checkbox"
+                                        checked={this.state.featured}
+                                        onChange={this.handleCheckboxChange} />
+                                        Featured?
+                                         </label>
+            
+                    : null }
 
                   <div className="d-flex flex-row-reverse">
 
                   <a className="btn btn-outline-danger" onClick={this.toggleEditor}>Edit Post</a>
-                  { this.state.editorOpen ? <a className="btn btn-outline-success" onClick={this.handleUpdate}>Publish Changes</a> : null }
+                  { this.state.editorOpen ? <a className="btn btn-success text-white" onClick={this.handleUpdate}>Publish Changes</a> : null }
                   { this.state.editorOpen ? <a className="btn btn-primary text-white" onClick={this.handleDeletePost}>Delete Post</a> : null }
                     </div>
                 </div>
