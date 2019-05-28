@@ -10,9 +10,9 @@ import SignOut from './auth/components/SignOut'
 import ChangePassword from './auth/components/ChangePassword'
 import Form from './Form'
 import Home from './Home'
-import Calendar from './Calendar'
 
 import Alert from 'react-bootstrap/Alert'
+import CalendarComponent from './Calendar'
 
 
 
@@ -58,7 +58,7 @@ class App extends Component {
           )} />
 
           <AuthenticatedRoute user={user} path='/calendar' render={() => (
-            <Calendar user={user}/>
+            <CalendarComponent user={user}/>
           )} />
 
           <AuthenticatedRoute user={user} path='/pinned' render={() => (
