@@ -3,6 +3,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 // import { WithContext as ReactTags } from 'react-tag-input'
 import apiUrl from './apiConfig'
+import ImageUploader from './ImageUploader'
 
 // const KeyCodes = {
 //     comma: 188,
@@ -104,7 +105,9 @@ class Blogpost extends Component {
                 <div className="card-body">
                   {/* <h5 className="card-title">Special title treatment</h5> */}
                   { this.state.editorOpen ? null : <p className="card-text">{this.props.text}</p> }
-        
+
+                  { this.state.editorOpen ? null : <ImageUploader blogpostId={this.props.id} token={this.props.user.token}/> }
+
 
                   { this.state.editorOpen ? <ReactQuill theme="snow" value={this.state.text} onChange={this.handleChange} /> : null }
                   { this.state.editorOpen ? <label>
