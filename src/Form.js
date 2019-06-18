@@ -24,9 +24,8 @@ class Form extends Component {
       archiveVisibility: false
     }
     // binding the rich text editor
-    this.handleChange = this.handleChange.bind(this)
   }
-  handleChange(value) {
+  handleChange = (value) => {
     this.setState({ text: value })
   }
 
@@ -114,8 +113,6 @@ class Form extends Component {
   }
 
   render() {
-    // const { tags, suggestions } = this.state
-
     return (
       <div>
         <br />

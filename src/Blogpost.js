@@ -1,17 +1,8 @@
 import React, { Component } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-// import { WithContext as ReactTags } from 'react-tag-input'
 import apiUrl from './apiConfig'
-import ImageUploader from './ImageUploader'
-
-// const KeyCodes = {
-//     comma: 188,
-//     enter: 13
-// }
-
-// const delimiters = [KeyCodes.comma, KeyCodes.enter]
-
+import axios from 'axios'
 
 
 class Blogpost extends Component {
@@ -19,25 +10,60 @@ class Blogpost extends Component {
         super()
     
         this.state = {
+            selectedFile: null,
             editorOpen: false,
             heading: '',
             text: '',
+            image: '',
             pinned: false,
-
             tags: []
     
         }
       }
     
     componentDidMount() {
-    this.setState({ text: this.props.text,
+    this.setState({ 
+        text: this.props.text,
         heading: this.props.heading,
         tags: this.props.tags,
+        image: this.props.image,
         pinned: this.props.pinned,
         featured: this.props.featured
     })
     }
     
+    
+    fileSelectedHandler = event => {
+      console.log(event.target.files[0])
+      this.setState({
+          selectedFile: event.target.files[0]
+      })
+    }
+
+    fileUploadHandler = () => {
+      const fd = new FormData()
+      fd.append('image', this.state.selectedFile)
+      axios.post('http://localhost:4741/image-upload', fd, {
+          onUploadProgress: progressEvent => {
+              console.log('Upload Progress: ' + Math.round(progressEvent.loaded / progressEvent.total * 100) + '%')
+          }
+      })
+          .then(res => {
+              fetch(`${apiUrl}/blogposts/${this.props.id}`, {
+                  method: 'PATCH',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token token=${this.props.user.token}`
+                  },
+                  body: JSON.stringify({
+                          blogpost: {
+                            image: res.data.imageUrl
+                          }  
+                  })
+                })
+          })
+    }
+
     handleChange = (value) => {
      this.setState({ text: value })
     }
@@ -70,6 +96,7 @@ class Blogpost extends Component {
           })
             .then(this.props.getAllBlogPosts)
             .catch(console.log('error'))
+        this.fileUploadHandler()
       }
 
       handleDeletePost = () => {
@@ -92,6 +119,7 @@ class Blogpost extends Component {
           [name]: value
         })
       }
+      
     
     render() {
         // const { tags, suggestions } = this.state
@@ -106,7 +134,9 @@ class Blogpost extends Component {
                   {/* <h5 className="card-title">Special title treatment</h5> */}
                   { this.state.editorOpen ? null : <p className="card-text">{this.props.text}</p> }
 
-                  { this.state.editorOpen ? null : <ImageUploader blogpostId={this.props.id} token={this.props.user.token}/> }
+                  { this.state.editorOpen && <input className="form-control-file" type="file" onChange={ this.fileSelectedHandler }/> }
+
+                  { this.state.editorOpen && <img src={this.state.image} alt="" /> }
 
 
                   { this.state.editorOpen ? <ReactQuill theme="snow" value={this.state.text} onChange={this.handleChange} /> : null }

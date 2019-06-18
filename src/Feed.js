@@ -17,7 +17,7 @@ class Feed extends Component {
     render() {
         const BlogpostList = () => this.props.blogposts.map(blogpost => 
             <div key={blogpost._id}>
-              <Blogpost getAllBlogPosts={this.props.getAllBlogPosts} featured={blogpost.featured} pinned={blogpost.pinned} page={blogpost.page} heading={blogpost.heading} text={blogpost.text} id={blogpost._id} user={this.props.user} /> 
+              <Blogpost getAllBlogPosts={this.props.getAllBlogPosts} image={blogpost.image} featured={blogpost.featured} pinned={blogpost.pinned} page={blogpost.page} heading={blogpost.heading} text={blogpost.text} id={blogpost._id} user={this.props.user} /> 
             </div>
           )  
 

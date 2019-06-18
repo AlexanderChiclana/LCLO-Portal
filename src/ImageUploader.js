@@ -41,8 +41,8 @@ class ImageUploader extends Component {
     render() {
         return (
             <div>
-                <input type="file" onChange={ this.fileSelectedHandler }/>
-                <button onClick={this.fileUploadHandler}> Upload Photo </button>
+                <input className="form-control-file" type="file" onChange={ this.fileSelectedHandler }/>
+                <button className="btn btn-success" onClick={() => this.props.fileUploadHandler(this.state.selectedFile)}> Upload Photo </button>
             </div>
         )
     }
