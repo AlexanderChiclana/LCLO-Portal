@@ -96,7 +96,8 @@ class Blogpost extends Component {
           })
             .then(this.props.getAllBlogPosts)
             .catch(console.log('error'))
-        this.fileUploadHandler()
+            
+             this.state.selectedFile && this.fileUploadHandler()
       }
 
       handleDeletePost = () => {
