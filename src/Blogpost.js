@@ -3,6 +3,8 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import apiUrl from './apiConfig'
 import axios from 'axios'
+import DOMPurify from 'dompurify'
+
 
 
 class Blogpost extends Component {
@@ -96,7 +98,7 @@ class Blogpost extends Component {
           })
             .then(this.props.getAllBlogPosts)
             .catch(console.log('error'))
-            
+
              this.state.selectedFile && this.fileUploadHandler()
       }
 
@@ -133,7 +135,7 @@ class Blogpost extends Component {
                  { this.state.editorOpen ? <input type="text" className="form-control form-control-lg" placeholder="Posting Title" value={this.state.heading} onChange={this.handleTitle} /> : <h5 className="card-header">{this.props.heading}</h5> }    
                 <div className="card-body">
                   {/* <h5 className="card-title">Special title treatment</h5> */}
-                  { this.state.editorOpen ? null : <p className="card-text">{this.props.text}</p> }
+                  { this.state.editorOpen ? null : <p className="card-text" dangerouslySetInnerHTML= {{ __html: DOMPurify.sanitize(this.props.text) }} ></p> }
 
                   { this.state.editorOpen && <input className="form-control-file" type="file" onChange={ this.fileSelectedHandler }/> }
 

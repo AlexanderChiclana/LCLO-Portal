@@ -6,6 +6,7 @@ import apiUrl from './apiConfig'
 import Feed from './Feed'
 import axios from 'axios'
 
+
 class Form extends Component {
   constructor() {
     super()
@@ -14,18 +15,18 @@ class Form extends Component {
       user: null,
       alerts: [],
       formTitle: '',
-      imageURL: '',
       text: '',
       pinned: false,
       featured: false,
       tags: [],
       currentTagValue: '',
       blogposts: [],
-      archiveVisibility: false
+      archiveVisibility: false,
+      selectedFile: ''
     }
     // binding the rich text editor
   }
-  handleChange = (value) => {
+  handleChange = value => {
     this.setState({ text: value })
   }
 
@@ -42,35 +43,91 @@ class Form extends Component {
       })
   }
 
-  handleSubmit = () => {
-    fetch(`${apiUrl}/blogposts`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token token=${this.props.user.token}`
-      },
-      body: JSON.stringify({
-        blogpost: {
-          page: this.props.page,
-          heading: this.state.formTitle,
-          text: this.state.text,
-          tags: this.state.tags,
-          image: this.state.imageURL,
-          pinned: this.state.pinned,
-          featured: this.state.featured
+  handleSubmit = () => { 
+    const data = {
+      blogpost: {
+        page: this.props.page,
+        heading: this.state.formTitle,
+        text: this.state.text,
+        tags: this.state.tags,
+        pinned: this.state.pinned,
+        featured: this.state.featured
+      }
+    }
+
+    const postFormData = () => {
+      console.log('post form data running')
+      console.log(data)
+      return axios.post(`${apiUrl}/blogposts`, data, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token token=${this.props.user.token}`
         }
       })
-    })
-      .then(this.getAllBlogPosts)
-      .then(
-        this.setState({
-          text: '',
-          formTitle: '',
-          image: '',
-          tags: [],
-          currentTagValue: ''
-        })
-      )
+    }
+
+    const fd = new FormData()
+    fd.append('image', this.state.selectedFile)
+
+    const postImage = () =>
+      axios.post(`${apiUrl}/image-upload`, fd, {
+        onUploadProgress: progressEvent => {
+          console.log(
+            'Upload Progress: ' +
+              Math.round((progressEvent.loaded / progressEvent.total) * 100) +
+              '%'
+          )
+        }
+      })
+
+ if (this.state.selectedFile) {
+          postImage()
+            .then(res => {
+              data.blogpost.image = res.data.imageUrl
+              console.log(res)
+              console.log(res.data.imageUrl)
+            })
+            .then(
+              () => {
+              postFormData()   
+            })
+          .then(
+            () => this.getAllBlogPosts()
+            )
+            .then(() => 
+              this.setState({
+                text: '',
+                formTitle: '',
+                image: '',
+                selectedFile: '',
+                pinned: false,
+                featured: false,
+                tags: [],
+                currentTagValue: ''
+              })
+            )
+            .catch((error) => {
+              alert('something went wrong, please try again with no image or a different image. Only JPEG and PNG files are accepted ')
+              console.log(error)
+            })
+    } else {
+    console.log('no image send')
+    postFormData().then((res) => { 
+            this.setState({
+                text: '',
+                formTitle: '',
+                image: '',
+                selectedFile: '',
+                pinned: false,
+                featured: false,
+                tags: [],
+                currentTagValue: ''
+              })
+            }
+            ).then(
+              () => this.getAllBlogPosts()
+              )
+  }
   }
 
   handleTitle = event => {
@@ -109,7 +166,14 @@ class Form extends Component {
   }
 
   handleImageURL = event => {
-    this.setState({ imageURL: event.target.value }) 
+    this.setState({ imageURL: event.target.value })
+  }
+
+  fileSelectedHandler = event => {
+    console.log(event.target.files[0])
+    this.setState({
+      selectedFile: event.target.files[0]
+    })
   }
 
   render() {
@@ -141,12 +205,18 @@ class Form extends Component {
             value={this.state.formTitle}
             onChange={this.handleTitle}
           />
-             <input
+          {/* <input
             type='text'
             className='form-control form-control-lg'
             placeholder='Image URL'
             value={this.state.imageURL}
             onChange={this.handleImageURL}
+          /> */}
+
+          <input
+            className='form-control-file'
+            type='file'
+            onChange={this.fileSelectedHandler}
           />
 
           <ReactQuill
