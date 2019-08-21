@@ -22,6 +22,7 @@ class Form extends Component {
       currentTagValue: '',
       blogposts: [],
       archiveVisibility: false,
+      youtubeUrl: '',
       selectedFile: ''
     }
     // binding the rich text editor
@@ -43,12 +44,17 @@ class Form extends Component {
       })
   }
 
+  handleYoutubeUrl = (event) => {
+    this.setState({ youtubeUrl: event.target.value })
+  }
+
   handleSubmit = () => { 
     const data = {
       blogpost: {
         page: this.props.page,
         heading: this.state.formTitle,
         text: this.state.text,
+        video: this.state.youtubeUrl,
         tags: this.state.tags,
         pinned: this.state.pinned,
         featured: this.state.featured
@@ -102,6 +108,7 @@ class Form extends Component {
                 selectedFile: '',
                 pinned: false,
                 featured: false,
+                youtubeUrl: '',
                 tags: [],
                 currentTagValue: ''
               })
@@ -116,6 +123,7 @@ class Form extends Component {
             this.setState({
                 text: '',
                 formTitle: '',
+                youtubeUrl: '',
                 image: '',
                 selectedFile: '',
                 pinned: false,
@@ -205,13 +213,13 @@ class Form extends Component {
             value={this.state.formTitle}
             onChange={this.handleTitle}
           />
-          {/* <input
+          <input
             type='text'
             className='form-control form-control-lg'
-            placeholder='Image URL'
-            value={this.state.imageURL}
-            onChange={this.handleImageURL}
-          /> */}
+            placeholder='Youtube URL'
+            value={this.state.youtubeUrl}
+            onChange={this.handleYoutubeUrl}
+          />
 
           <input
             className='form-control-file'
