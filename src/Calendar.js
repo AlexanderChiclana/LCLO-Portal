@@ -3,6 +3,9 @@ import Calendar from 'react-calendar'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import apiUrl from './apiConfig'
+import axios from 'axios'
+import DOMPurify from 'dompurify'
+
 
 class CalendarComponent extends Component {
       constructor () {
@@ -11,7 +14,8 @@ class CalendarComponent extends Component {
         this.state = {
             date: new Date(),
             formTitle: '',
-            text: ''
+            text: '',
+            archive: []
         }
       }
 
@@ -23,6 +27,14 @@ class CalendarComponent extends Component {
 
     handleTitle = (event) => {
         this.setState({ formTitle: event.target.value })
+    }
+
+    handleArchive = () => {
+      axios
+      .get(`${apiUrl}/calendar`)
+      .then(res => {
+        this.setState({ archive: res.data.calendar })
+      })
     }
 
     handleSubmit = () => {
@@ -39,21 +51,27 @@ class CalendarComponent extends Component {
                 date: this.state.date
               }
             })
-          })
+          }).then(
+            this.setState({ formTitle: '', text: '' })
+          )
     }
 
     render() {
         return (
             <div>
-            <input
+         
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '10px' }}>
+              <Calendar onChange={this.onCalChange} value={this.state.date} />
+              </div>
+              <input
             type='text'
             className='form-control form-control-lg'
-            placeholder='Posting Title'
+            placeholder='Event Title'
             value={this.state.formTitle}
             onChange={this.handleTitle}
           />
-              <Calendar onChange={this.onCalChange} value={this.state.date} />
               <ReactQuill theme='snow'
+            style={{ backgroundColor: 'white' }}
             value={this.state.text}
             onChange={this.handleQuillChange}/>
 
@@ -75,9 +93,58 @@ class CalendarComponent extends Component {
             Submit to Calendar
           </button>
         </div>
+        
+        { this.state.archive.map((event, index) => (<CalendarEvent key={ index }
+        { ...event } />)) }
+
             </div>
         )
     }
 }
+
+class CalendarEvent extends Component {
+  state = { editorOpen: false }
+
+  toggleEditor = () => {
+    this.setState(prevState => (
+        { editorOpen: !prevState.editorOpen }))
+    }
+  
+
+
+  render() {
+    return (
+      <div>
+      <br />
+    <div className="card">
+
+       <div className="card-header d-flex justify-content-between">
+        <h5>{this.props.heading}</h5>
+        
+        { new Date(this.props.date) > new Date() ? <h5 style={{ color: 'green', fontWeight: 'bold' }}>Upcoming Event 📅</h5> : <h5 style={{ fontStyle: 'italic', fontWeight: 200 }}>Past Event</h5>} 
+
+       </div>     
+      <div className="card-body">
+        {/* <h5 className="card-title">Special title treatment</h5> */}
+        { <p className="card-text" dangerouslySetInnerHTML= {{ __html: DOMPurify.sanitize(this.props.text) }} ></p> }
+
+
+        {/* { this.state.editorOpen ? <ReactQuill theme="snow" value={this.state.text} onChange={this.handleChange} /> : null } */}
+     
+
+        <div className="d-flex flex-row-reverse">
+
+        <a className="btn btn-outline-danger" onClick={this.toggleEditor}>Edit Post</a>
+        { this.state.editorOpen ? <a className="btn btn-success text-white" onClick={this.handleUpdate}>Publish Changes</a> : null }
+        { this.state.editorOpen ? <a className="btn btn-primary text-white" onClick={this.handleDeletePost}>Delete Post</a> : null }
+          </div>
+      </div>
+    </div>           
+
+
+</div>
+    )
+  }
+} 
 
 export default CalendarComponent

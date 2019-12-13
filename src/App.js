@@ -81,9 +81,9 @@ class App extends Component {
             <Form setUser={this.setUser} page={'points_of_encounter'} pageName={'Points Of Encounter'} user={user}/>
           )} />
 
-          <AuthenticatedRoute user={user} path='/team_member' render={() => (
+          {/* <AuthenticatedRoute user={user} path='/team_member' render={() => (
             <Form setUser={this.setUser} page={'team_member'} pageName={'Team Member'} user={user}/>
-          )} />
+          )} /> */}
 
           <AuthenticatedRoute user={user} path='/news' render={() => (
             <Form setUser={this.setUser} page={'news'} pageName={'News'} user={user}/>

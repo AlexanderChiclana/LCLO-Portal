@@ -7,7 +7,7 @@ const authenticatedOptions = (
   <React.Fragment>
     <Link to='/calendar'>Calendar</Link>
     <Link to='/pinned'>Pinned</Link>
-    <Link to="/team_member">Team</Link>
+    {/* <Link to="/team_member">Team</Link> */}
 
     <Link to="/training">Training</Link>
     <Link to="/capacity_building">Capacity Building</Link>
