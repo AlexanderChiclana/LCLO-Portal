@@ -5,6 +5,7 @@ import 'react-quill/dist/quill.snow.css'
 import apiUrl from './apiConfig'
 import axios from 'axios'
 import DOMPurify from 'dompurify'
+import SearchFilter from './SearchFilter.js'
 
 
 class CalendarComponent extends Component {
@@ -15,6 +16,8 @@ class CalendarComponent extends Component {
             date: new Date(),
             formTitle: '',
             text: '',
+            linkedBlogpostHeading: '',
+            linkedBlogpostId: '',
             archive: []
         }
       }
@@ -37,6 +40,13 @@ class CalendarComponent extends Component {
       })
     }
 
+    handleBlogpostLink = (id, heading) => {
+      this.setState({
+        linkedBlogpostId: id,
+        linkedBlogpostHeading: heading
+      })
+    }
+
     handleSubmit = () => {
         fetch(`${apiUrl}/calendar`, {
             method: 'POST',
@@ -48,7 +58,8 @@ class CalendarComponent extends Component {
               calendar: {
                 heading: this.state.formTitle,
                 text: this.state.text,
-                date: this.state.date
+                date: this.state.date,
+                linkedBlogpost: this.state.linkedBlogpostId
               }
             })
           }).then(
@@ -70,11 +81,14 @@ class CalendarComponent extends Component {
             value={this.state.formTitle}
             onChange={this.handleTitle}
           />
+              <SearchFilter linkedBlogpostHeading={this.state.linkedBlogpostHeading} handleBlogpostLink={this.handleBlogpostLink} />
+
+
               <ReactQuill theme='snow'
             style={{ backgroundColor: 'white' }}
             value={this.state.text}
             onChange={this.handleQuillChange}/>
-
+            
             
         <div className='d-flex flex-row-reverse'>
           <button
@@ -94,7 +108,7 @@ class CalendarComponent extends Component {
           </button>
         </div>
         
-        { this.state.archive.map((event, index) => (<CalendarEvent key={ index }
+        { this.state.archive.map((event, index) => (<CalendarEvent handleArchive={this.handleArchive} user={this.props.user} key={ index }
         { ...event } />)) }
 
             </div>
@@ -110,7 +124,16 @@ class CalendarEvent extends Component {
         { editorOpen: !prevState.editorOpen }))
     }
   
-
+  handleDeletePost = (id) => {
+    fetch(`${apiUrl}/calendar/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token token=${this.props.user.token}`
+      }
+    }).then(() => this.props.handleArchive())
+    .catch(console.log('error'))  
+  }  
 
   render() {
     return (
@@ -135,8 +158,8 @@ class CalendarEvent extends Component {
         <div className="d-flex flex-row-reverse">
 
         <a className="btn btn-outline-danger" onClick={this.toggleEditor}>Edit Post</a>
-        { this.state.editorOpen ? <a className="btn btn-success text-white" onClick={this.handleUpdate}>Publish Changes</a> : null }
-        { this.state.editorOpen ? <a className="btn btn-primary text-white" onClick={this.handleDeletePost}>Delete Post</a> : null }
+        {/* { this.state.editorOpen ? <a className="btn btn-success text-white" onClick={this.handleUpdate}>Publish Changes</a> : null } */}
+        { this.state.editorOpen ? <a className="btn btn-primary text-white" onClick={() => this.handleDeletePost(this.props._id)}>Delete Post</a> : null }
           </div>
       </div>
     </div>           
