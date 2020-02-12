@@ -1,6 +1,6 @@
 {
-  "name": "react-auth-template",
-  "homepage": "https://alexanderchiclana.github.io/<REPO NAME>",
+  "name": "LCLO-Portal",
+  "homepage": "https://alexanderchiclana.github.io/LCLO-Portal",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
